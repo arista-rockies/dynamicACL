@@ -8,11 +8,24 @@ copy to `flash:`
 
 and install into eos:
 
-`copy flash:dynamicACL.......rpm extension:`
-`extension dynamicACL.....rpm`
-`copy installed-extensions boot-extensions`
+```
+copy flash:dynamicACL.......rpm extension:
+extension dynamicACL.....rpm`
+copy installed-extensions boot-extensions
+```
 
 ## configuration
+enable the management api
+
+```
+management api http-commands
+   protocol unix-socket
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+```
+
 for use in a vrf use the following syntax replacing `MGMT` with the desired vrf
 
 `schedule dynamicACL interval 2 timeout 1 max-log-files 0 command bash sudo ip netns exec ns-MGMT /mnt/flash/dynamicACL.py -hosts www.google.com www.novell.com www.arista.com -recordType aaaa`
