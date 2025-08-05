@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pyeapi, argparse
+import pyeapi, argparse, uuid
 import dns.resolver
 
 parser = argparse.ArgumentParser()
@@ -41,7 +41,7 @@ if len(hosts):
     # we have hosts now, let's go ahead and rewrite the acl
     family = "ip" if args.recordType == "a" else "ipv6"
     cmds = [
-        "configure session dynamicacl",
+        f"configure session dynamicacl-{str(uuid.uuid4())}",
         f"no {family} access-list {args.acl}",
         f"{family} access-list {args.acl}"
     ]
