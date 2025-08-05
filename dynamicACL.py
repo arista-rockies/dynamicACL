@@ -6,7 +6,7 @@
 # that can be found in the LICENSE file.
 """
 
-import pyeapi, argparse, uuid
+import argparse, uuid, json
 import dns.resolver
 
 parser = argparse.ArgumentParser()
@@ -16,8 +16,12 @@ parser.add_argument('-recordType', default="a", help="a or aaaa")
 parser.add_argument('-lineFormat', default='permit ip any host {}', help="a python format string to be used for each host line")
 parser.add_argument('-preLines', nargs='+', help="any acl lines to include before dns resolves space delimted and wrapped in quotes")
 parser.add_argument('-postLines', nargs='+', help="any acl lines to include after dns resolves space delimted and wrapped in quotes")
+parser.add_argument('-dryrun', action='store_true', default=False, help="print to stdout the command sequence to run")
 
 args = parser.parse_args()
+
+if not args.dryrun:
+    import pyeapi
 
 hosts = []
 if args.preLines:
@@ -53,6 +57,9 @@ if len(hosts):
     ]
     cmds.extend(hosts)
     cmds.append("commit")
-    client = pyeapi.connect_to('localhost')
+    if not args.dryrun:
+        client = pyeapi.connect_to('localhost')
 
-    result = client.run_commands(cmds, autoComplete=True, enable=True)
+        result = client.run_commands(cmds, autoComplete=True, enable=True)
+    else:
+        print(json.dumps(cmds, indent=2))
