@@ -1,7 +1,7 @@
 %define _rpmfilename %%{NAME}-%%{VERSION}.%%{ARCH}.rpm
 
 Name:           dynamicACL
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Dynamic configuration of ACLs based on FQDN
 BuildArch:	noarch
