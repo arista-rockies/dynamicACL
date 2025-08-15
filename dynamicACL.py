@@ -17,6 +17,7 @@ parser.add_argument('-lineFormat', default='permit ip any host {}', help="a pyth
 parser.add_argument('-preLines', nargs='+', help="any acl lines to include before dns resolves space delimted and wrapped in quotes")
 parser.add_argument('-postLines', nargs='+', help="any acl lines to include after dns resolves space delimted and wrapped in quotes")
 parser.add_argument('-dryrun', action='store_true', default=False, help="print to stdout the command sequence to run")
+parser.add_argument('-nameServers', nargs='+', help="space delimited list of nameservers to use for resolution")
 
 args = parser.parse_args()
 
@@ -33,6 +34,9 @@ for host in args.hosts:
     hosts.append(f"remark {host}")
 
     r = dns.resolver.Resolver(configure=True)
+    if args.nameServers:
+        r.nameservers = args.nameServers
+
     try:
         answer = r.resolve(host, args.recordType)
     except dns.resolver.NXDOMAIN:
